@@ -18,7 +18,7 @@ Requires `numpy`. `astropy` is optional — Test 8 is the only test that uses it
 pip install numpy astropy
 ```
 
-Runtime is roughly 2–4 minutes, dominated by Test 5 (the 60,000-probe exactness check).
+Runtime is roughly 5–10 minutes, dominated by Test 5 (the 60,000-probe exactness check) and Test 5b.
 
 ## What each test verifies
 
@@ -26,9 +26,10 @@ Runtime is roughly 2–4 minutes, dominated by Test 5 (the 60,000-probe exactnes
 |---|---|---|
 | 1 | Primal phase-fold membership equals dual strip membership, 500 random hypotheses over the full `[0.5, 180]` d range | Lemma 4.1 |
 | 2 | All centerlines from one observation have slope `-k` and intercept `t_i` | Proposition 4.5 |
-| 3 | Redundancy ratio `N_f N / M` across 1-, 2-, and 4-year baselines vs. the closed form | Theorem 4.10 |
+| 3 | Redundancy ratio `N_f N / M` across 1-, 2-, and 4-year baselines vs. the closed form | Theorem 4.11 |
 | 4 | In-transit count equals arrangement depth at a test hypothesis | Lemma 4.1 |
-| 5 | Recovery of an injected transit; 60k random probes fail to beat the optimum; SR is constant within candidate intervals | Lemma 4.13 |
+| 5 | Recovery of an injected transit; 60k random probes fail to beat the optimum; SR is constant within candidate intervals | Lemma 4.14 |
+| 5b | Rate at which restricting the dual enumeration to `k >= 0` undercounts the in-transit set | Remark 4.2 |
 | 6 | Incremental sweep agrees with direct SR evaluation | implementation |
 | 7 | Per-candidate cost and the `\|C\|/N_f` evaluation-count ratio | Section 5.4 |
 | 8 | Wall-clock against `astropy.timeseries.BoxLeastSquares` on the same Ofir grid | Section 5.4 |

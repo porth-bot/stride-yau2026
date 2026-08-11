@@ -101,6 +101,24 @@ for j in rng2.integers(0,len(C5)-1,300):
     if max(vals)-min(vals)>1e-9*max(1,max(vals)): bad+=1
 print(f"  interval constancy: {tested-bad}/{tested}")
 
+print("\nTEST 5b: Negative event index (k=-1) necessity")
+# Restricting the dual enumeration to k>=0 must undercount. Measure how often.
+bad5b=0; tot5b=0
+for sd in (123,7,19,2024,31):
+    rr=np.random.default_rng(sd)
+    for _ in range(300):
+        P=rr.uniform(0.5,180); t0=rr.uniform(0,P); d_=rr.uniform(0.02,0.3)
+        full=set(); nonneg=set()
+        for i,ti in enumerate(t1):
+            for k in range(int(np.floor((ti-t0-d_/2)/P))-1, int(np.ceil((ti-t0+d_/2)/P))+2):
+                if abs(ti-t0-k*P)<=d_/2:
+                    full.add(i)
+                    if k>=0: nonneg.add(i)
+                    break
+        tot5b+=1
+        if full!=nonneg: bad5b+=1
+print(f"  k>=0 changes the in-transit set for {bad5b}/{tot5b} hypotheses ({100*bad5b/tot5b:.2f}%)")
+
 print("\nTEST 6: Sweep self-test")
 rng=np.random.default_rng(0); ok=0
 for _ in range(300):
