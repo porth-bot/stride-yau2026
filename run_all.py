@@ -115,9 +115,11 @@ print("\nTEST 7: Full-scale cost")
 tf=gen(365); yf,wf=inj(tf,10.5,2.3,0.15,0.005,42)
 reps=20; ta=time.time()
 for P in np.random.default_rng(1).uniform(0.5,180,reps): sweep(tf,yf,wf,P,0.15)
-pc=(time.time()-ta)/reps; Cb=3*int(365/CAD)*(int(365/PMIN)+1); eh=pc*Cb/3600
+pc=(time.time()-ta)/reps
+ngaps=int((tf[-1]-tf[0])/CAD); Kmax=int(np.floor((tf[-1]-tf[0])/PMIN))+3
+Cb=3*ngaps*Kmax; eh=pc*Cb/3600
 nfv=nf(365); gt=pc*nfv
-print(f"  N={len(tf)}, per-cand={pc*1e3:.1f}ms, |C|bound={Cb:.2e}")
+print(f"  N={len(tf)}, per-cand={pc*1e3:.1f}ms, S/dt={ngaps}, max|K_i|={Kmax}, |C|bound={Cb:.2e}")
 print(f"  STRIDE est: {eh:.0f}h, grid est: {gt:.1f}s, ratio: ~{eh*3600/gt:.0f}x")
 
 print("\nTEST 8: Astropy wall-clock comparison")

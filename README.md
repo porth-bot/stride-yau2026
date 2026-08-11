@@ -40,8 +40,9 @@ deterministic across machines and runs.
 
 The three timing lines are **not** deterministic — wall-clock, per-candidate milliseconds, and the
 Test 8 slowdown depend on hardware. The paper's numbers were measured on an Apple M4 MacBook Air. The
-evaluation-count ratio in Test 7 (`~835x`) is machine-independent and does reproduce exactly, since
-per-candidate cost cancels.
+evaluation-count upper bound in Test 7 (`~836x`, from `|C|_bound / N_f`) is machine-independent
+and does reproduce exactly, since per-candidate cost cancels. The actual candidate count can be
+significantly lower (on the 60-day instance, `|C|` is 41% of its bound).
 
 ## Parameters
 
