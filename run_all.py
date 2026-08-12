@@ -150,6 +150,21 @@ for Pw in novel[rng3.choice(len(novel),size=min(400,len(novel)),replace=False)]:
 print(f"  wrap points not in C: {len(novel):,}/{len(wr):,} ({100*len(novel)/len(wr):.1f}%)")
 print(f"  max_t0 SR constant across wrap: {testw-badw}/{testw}")
 
+print("\nTEST 5d: What exactness buys (Ofir grid vs boundary candidates)")
+S5=t5[-1]-t5[0]
+def _sweepmax(tt,yy,ww,P,d):
+    return sweep(tt,yy,ww,P,d)[0]
+def _ofir(S,os_):
+    f,gp=1/30.0,[]
+    while f<1/1.5: gp.append(1/f); f+=(C_DUTY*f**(-1/3))*f/(S*os_)
+    return np.array(gp)
+sr_stride=best[0]
+print(f"  STRIDE SR*={sr_stride:.5e} over {len(mids):,} candidates")
+for os_ in (1,3):
+    gp=_ofir(S5,os_)
+    gb=max(_sweepmax(t5,y5,w5,P,0.15) for P in gp)
+    print(f"  Ofir OS={os_}: {len(gp):,} periods, SR={gb:.5e}, shortfall={100*(1-gb/sr_stride):.2f}%")
+
 print("\nTEST 6: Sweep self-test")
 rng=np.random.default_rng(0); ok=0
 for _ in range(300):
