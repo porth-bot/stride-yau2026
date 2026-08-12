@@ -31,8 +31,9 @@ Runtime is roughly 5–10 minutes, dominated by Test 5 (the 60,000-probe exactne
 | 5 | Recovery of an injected transit; 60k random probes fail to beat the optimum; SR is constant within candidate intervals | Lemma 4.14 |
 | 5b | Rate at which restricting the dual enumeration to `k >= 0` undercounts the in-transit set | Remark 4.2 |
 | 5c | Wrap events absent from `C`; max SR constant across them | Lemma 4.14 (wrap half) |
-| 5d | Peak SR from the Ofir grid vs STRIDE's exact optimum, at OS = 1 and 3 | Section 5.4 |
+| 5d | Peak SR from the Ofir grid vs STRIDE's exact optimum (baseline and shallow), at OS = 1 and 3 | Section 5.4 |
 | 5e | N/sqrt(M) scaling across 1-, 2-, 4-, and 8-year baselines | Proposition 4.9 |
+| 5f | Brute-force vertex enumeration at N=55 over baselines 8, 20, 60, 150 d | Proposition 4.9 |
 | 6 | Incremental sweep agrees with direct SR evaluation | implementation |
 | 7 | Per-candidate cost and the `\|C\|/N_f` evaluation-count ratio | Section 5.4 |
 | 8 | Wall-clock against `astropy.timeseries.BoxLeastSquares` on the same Ofir grid | Section 5.4 |

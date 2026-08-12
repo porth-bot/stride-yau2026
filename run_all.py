@@ -159,17 +159,47 @@ def _ofir(S,os_):
     while f<1/1.5: gp.append(1/f); f+=(C_DUTY*f**(-1/3))*f/(S*os_)
     return np.array(gp)
 sr_stride=best[0]
-print(f"  STRIDE SR*={sr_stride:.5e} over {len(mids):,} candidates")
+print(f"  Baseline SR*={sr_stride:.5e} over {len(mids):,} evaluation points")
 for os_ in (1,3):
     gp=_ofir(S5,os_)
     gb=max(_sweepmax(t5,y5,w5,P,0.15) for P in gp)
     print(f"  Ofir OS={os_}: {len(gp):,} periods, SR={gb:.5e}, shortfall={100*(1-gb/sr_stride):.2f}%")
+y_sh,w_sh=inj(t5,5.3,2.3,0.15,0.0015,77)
+sr_sh=max(sweep(t5,y_sh,w_sh,P,0.15)[0] for P in mids)
+print(f"  Shallow  SR*={sr_sh:.5e} over {len(mids):,} evaluation points")
+for os_ in (1,3):
+    gp=_ofir(S5,os_)
+    gb=max(_sweepmax(t5,y_sh,w_sh,P,0.15) for P in gp)
+    print(f"  Ofir OS={os_}: {len(gp):,} periods, SR={gb:.5e}, shortfall={100*(1-gb/sr_sh):.2f}%")
 
 print("\nTEST 5e: N/sqrt(M) scaling (Prop 4.9 consequence)")
 for S_s in (365, 730, 1460, 2920):
     t_s = gen(S_s)
     N_s = len(t_s); M_s = M(t_s)
     print(f"  S={S_s:4d}d: N={N_s:,}, M={M_s:,}, N/sqrt(M)={N_s/np.sqrt(M_s):.2f}")
+
+print("\nTEST 5f: Vertex enumeration (Prop 4.9 tightness)")
+N5f=55; d5f=0.15; pm5f=1.5; px5f=30.0
+for S5f in (8, 20, 60, 150):
+    rng5f=np.random.default_rng(42)
+    t5f=np.sort(rng5f.uniform(0, S5f, N5f))
+    kmax5f=[int(np.floor((t5f[i]-t5f[0])/pm5f))+1 for i in range(N5f)]
+    M5f=sum(kmax5f[i]+2 for i in range(N5f))
+    V5f=0
+    for i in range(N5f):
+        for j in range(i+1, N5f):
+            dt=t5f[j]-t5f[i]
+            for dk in range(1, int(np.floor(dt/pm5f))+2):
+                for si in (-1,1):
+                    for sj in (-1,1):
+                        Ps=(dt+(sj-si)*d5f/2)/dk
+                        if Ps<pm5f or Ps>px5f: continue
+                        ki=int(np.floor((t5f[i]+si*d5f/2)/Ps))
+                        kj=ki+dk
+                        if ki<-1 or ki>kmax5f[i]: continue
+                        if kj<-1 or kj>kmax5f[j]: continue
+                        V5f+=1
+    print(f"  S={S5f:3d}d: M/N={M5f/N5f:.0f}, V={V5f:,}, V/(NM)={V5f/(N5f*M5f):.2f}, V/M^2={V5f/M5f**2:.3f}")
 
 print("\nTEST 6: Sweep self-test")
 rng=np.random.default_rng(0); ok=0

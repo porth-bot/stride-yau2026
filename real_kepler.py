@@ -23,7 +23,7 @@ URL = ("https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:Kepler/url/"
        "missions/kepler/lightcurves/0119/011904151/"
        "kplr011904151-2009350155506_llc.fits")
 FITS = "kplr011904151_q3_llc.fits"
-P_TRUE = 0.8374907              # Kepler-10b, Batalha et al. 2011
+P_TRUE = 0.837495                # Kepler-10b, Batalha et al. 2011 (+4e-6/-5e-6)
 DUR = 0.075                     # ~1.8 h transit duration
 PMIN, PMAX = 0.5, 3.0
 
