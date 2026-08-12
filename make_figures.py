@@ -106,9 +106,20 @@ def figure3_grid_miss():
         best = max(sweep(t, y, w, p, 0.15)[0] for p in sel)
         print(f"  OS={os_}: {len(sel)} grid points in window, best SR={best:.6e}, "
               f"shortfall={100*(1-best/sr.max()):.2f}%")
-    idx = np.linspace(0, len(P) - 1, 180).astype(int)
-    print("  curve coordinates (P, SR*1e7):")
-    print("   ", " ".join(f"({P[i]:.4f},{sr[i]*1e7:.4f})" for i in idx[:6]), "...")
+    # 180 evenly spaced samples plus the exact peak, so the plotted polyline
+    # reaches the maximum instead of clipping it. Deduplicated and re-sorted,
+    # this is the 181-point series the paper draws.
+    idx = np.unique(np.concatenate(
+        [np.linspace(0, len(P) - 1, 180).astype(int), [int(np.argmax(sr))]]))
+    idx.sort()
+    print(f"  curve coordinates, {len(idx)} points (P, SR*1e7):")
+    print("   ", " ".join(f"({P[i]:.4f},{sr[i]*1e7:.4f})" for i in idx))
+    for os_ in (1, 3):
+        g = _ofir(t[-1] - t[0], os_)
+        sel = g[(g >= lo) & (g <= hi)]
+        print(f"  OS={os_} marker coordinates, {len(sel)} points:")
+        print("   ", " ".join(
+            f"({p:.4f},{sweep(t, y, w, p, 0.15)[0]*1e7:.4f})" for p in sel))
 
 
 def figure4_kepler():
@@ -131,6 +142,16 @@ def figure4_kepler():
         if m.sum():
             print(f"    {0.5*(a+b):+.3f}  {y[m].mean()*1e6:+8.1f}  "
                   f"{y[m].std()/np.sqrt(m.sum())*1e6:5.1f}")
+
+    # The plotted scatter is a fixed 55% subsample of the cadences inside the
+    # window, thinned only so the cloud does not swamp the binned profile.
+    # Every plotted point is a real cadence; the seed pins which ones.
+    sel = np.abs(hrs) <= 4.5
+    hw, yw = hrs[sel], y[sel] * 1e6
+    keep = np.random.default_rng(7).random(len(hw)) < 0.55
+    print(f"  scatter subsample, {int(keep.sum())} of {len(hw)} cadences "
+          f"(rng seed 7, keep < 0.55) (hours, ppm):")
+    print("   ", " ".join(f"({a:.3f},{b:.0f})" for a, b in zip(hw[keep], yw[keep])))
 
 
 if __name__ == "__main__":
