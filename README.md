@@ -38,6 +38,17 @@ Runtime is roughly 5–10 minutes, dominated by Test 5 (the 60,000-probe exactne
 | 7 | Per-candidate cost and the `\|C\|/N_f` evaluation-count ratio | Section 5.4 |
 | 8 | Wall-clock against `astropy.timeseries.BoxLeastSquares` on the same Ofir grid | Section 5.4 |
 
+## Figures
+
+`make_figures.py` regenerates the data plotted in Figures 2, 3, and 4 (vertex scaling,
+the Ofir grid missing the peak, and the phase-folded Kepler-10b recovery). The paper draws
+them with `pgfplots` from these coordinates, so no image files are involved.
+
+```bash
+python3 make_figures.py            # Figures 2 and 3, numpy only
+python3 make_figures.py --kepler   # adds Figure 4; needs astropy and network
+```
+
 ## Real Kepler data
 
 `real_kepler.py` is a separate script (needs network) that downloads one quarter of Kepler
