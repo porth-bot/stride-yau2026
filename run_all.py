@@ -119,6 +119,37 @@ for sd in (123,7,19,2024,31):
         if full!=nonneg: bad5b+=1
 print(f"  k>=0 changes the in-transit set for {bad5b}/{tot5b} hypotheses ({100*bad5b/tot5b:.2f}%)")
 
+print("\nTEST 5c: Wrap events (Lemma 4.14, second half of proof)")
+# Wrap points P=(t_i +- d/2)/m are single-time/integer, so they are NOT in C
+# (C holds differences only). The lemma claims max_t0 SR is still constant across
+# them because the sweep is cyclic and K_i carries the k=-1 buffer.
+wr=[]
+for ti in t5:
+    for cc in (-0.075,0.0,0.075):
+        v=ti+cc
+        if v<=0: continue
+        for mm in range(max(1,int(np.floor(v/30.0))), int(np.ceil(v/1.5))+2):
+            Pw=v/mm
+            if 1.5<=Pw<=30.0: wr.append(Pw)
+wr=np.unique(np.array(wr))
+ix=np.searchsorted(C5,wr); near=np.full(len(wr),np.inf)
+for a,(Pw,i) in enumerate(zip(wr,ix)):
+    if i<len(C5): near[a]=min(near[a],abs(C5[i]-Pw))
+    if i>0: near[a]=min(near[a],abs(C5[i-1]-Pw))
+novel=wr[near>1e-9]
+rng3=np.random.default_rng(9); badw=0; testw=0
+for Pw in novel[rng3.choice(len(novel),size=min(400,len(novel)),replace=False)]:
+    j=np.searchsorted(C5,Pw)
+    if j==0 or j>=len(C5): continue
+    a_,b_=C5[j-1],C5[j]
+    if b_-a_<1e-9: continue
+    v=[sweep(t5,y5,w5,P_,0.15)[0] for P_ in
+       (a_+0.25*(Pw-a_), Pw-1e-9, Pw, Pw+1e-9, Pw+0.75*(b_-Pw))]
+    testw+=1
+    if (max(v)-min(v))>1e-9*max(1e-300,max(v)): badw+=1
+print(f"  wrap points not in C: {len(novel):,}/{len(wr):,} ({100*len(novel)/len(wr):.1f}%)")
+print(f"  max_t0 SR constant across wrap: {testw-badw}/{testw}")
+
 print("\nTEST 6: Sweep self-test")
 rng=np.random.default_rng(0); ok=0
 for _ in range(300):

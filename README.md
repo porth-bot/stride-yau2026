@@ -30,9 +30,21 @@ Runtime is roughly 5–10 minutes, dominated by Test 5 (the 60,000-probe exactne
 | 4 | In-transit count equals arrangement depth at a test hypothesis | Lemma 4.1 |
 | 5 | Recovery of an injected transit; 60k random probes fail to beat the optimum; SR is constant within candidate intervals | Lemma 4.14 |
 | 5b | Rate at which restricting the dual enumeration to `k >= 0` undercounts the in-transit set | Remark 4.2 |
+| 5c | Wrap events absent from `C`; max SR constant across them | Lemma 4.14 (wrap half) |
 | 6 | Incremental sweep agrees with direct SR evaluation | implementation |
 | 7 | Per-candidate cost and the `\|C\|/N_f` evaluation-count ratio | Section 5.4 |
 | 8 | Wall-clock against `astropy.timeseries.BoxLeastSquares` on the same Ofir grid | Section 5.4 |
+
+## Real Kepler data
+
+`real_kepler.py` is a separate script (needs network) that downloads one quarter of Kepler
+long-cadence photometry for KIC 11904151 and runs the same boundary-candidate search over
+`P in [0.5, 3]` d. It recovers Kepler-10b at `P* = 0.837388` d against the published
+`0.8374907` d, a relative error of `1.2e-4`, with a measured depth of 145 ppm (published 152).
+
+```bash
+python3 real_kepler.py
+```
 
 ## Reproducibility
 
