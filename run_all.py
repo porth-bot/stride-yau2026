@@ -165,6 +165,12 @@ for os_ in (1,3):
     gb=max(_sweepmax(t5,y5,w5,P,0.15) for P in gp)
     print(f"  Ofir OS={os_}: {len(gp):,} periods, SR={gb:.5e}, shortfall={100*(1-gb/sr_stride):.2f}%")
 
+print("\nTEST 5e: N/sqrt(M) scaling (Prop 4.9 consequence)")
+for S_s in (365, 730, 1460, 2920):
+    t_s = gen(S_s)
+    N_s = len(t_s); M_s = M(t_s)
+    print(f"  S={S_s:4d}d: N={N_s:,}, M={M_s:,}, N/sqrt(M)={N_s/np.sqrt(M_s):.2f}")
+
 print("\nTEST 6: Sweep self-test")
 rng=np.random.default_rng(0); ok=0
 for _ in range(300):
